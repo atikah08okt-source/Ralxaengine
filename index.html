@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TAXHOLIDAY | SUPREME DEV</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        body { 
+            background: #050505; 
+            font-family: 'JetBrains Mono', monospace; 
+            height: 100vh; 
+            overflow: hidden; 
+            color: #fff; 
+        }
+        .screen { position: absolute; inset: 0; display: none; flex-direction: column; z-index: 50; }
+        .active-screen { display: flex !important; }
+        .wa-neon { color: #00ffa3; text-shadow: 0 0 10px #00ffa3, 0 0 20px rgba(0,255,163,0.5); }
+        .glass { background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(0, 255, 163, 0.15); }
+        .btn-dev { background: #00ffa3; color: #000; font-weight: 900; transition: 0.3s; }
+        .btn-dev:hover { box-shadow: 0 0 25px #00ffa3; transform: scale(1.02); }
+        .call-anim { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="screen-auth" class="screen active-screen items-center justify-center p-6">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-black wa-neon font-['Orbitron'] tracking-tighter">TAXHOLIDAY</h1>
+            <p class="text-[10px] opacity-50 tracking-[0.3em]">ENCRYPTED BYPASS v24</p>
+        </div>
+        <div class="w-full max-w-xs glass rounded-3xl p-8 space-y-5">
+            <input type="tel" id="login-num" class="w-full bg-transparent border-b border-[#00ffa3]/30 py-3 text-[#00ffa3] outline-none font-['Orbitron']" placeholder="IDENTITY NUMBER" value="881025765874">
+            <button onclick="handleLogin()" class="w-full btn-dev py-4 rounded-xl">INITIALIZE</button>
+        </div>
+    </div>
+
+    <div id="screen-main" class="screen">
+        <div class="p-5 flex justify-between items-center glass border-b border-[#00ffa3]/20">
+            <h1 class="text-xl font-black wa-neon font-['Orbitron']">DASHBOARD</h1>
+            <div id="dev-icon" class="hidden flex gap-4">
+                <i class="fas fa-plus-circle text-[#00ffa3] text-xl" onclick="addContactPrompt()"></i>
+                <i class="fas fa-microchip wa-neon text-xl" onclick="switchScreen('screen-dev')"></i>
+            </div>
+        </div>
+        <div id="chat-list" class="flex-1 overflow-y-auto p-4 space-y-3">
+            </div>
+    </div>
+
+    <div id="screen-call" class="screen bg-black items-center justify-between py-20">
+        <div class="text-center">
+            <div class="w-32 h-32 bg-[#00ffa3]/10 rounded-full mx-auto mb-6 flex items-center justify-center border border-[#00ffa3]/30">
+                <i class="fas fa-user text-5xl wa-neon call-anim"></i>
+            </div>
+            <h2 id="call-name" class="text-2xl font-bold mb-2">Mama Deral</h2>
+            <p class="text-[#00ffa3] animate-pulse">CALLING...</p>
+        </div>
+        <button onclick="switchScreen('screen-main')" class="bg-red-600 w-16 h-16 rounded-full flex items-center justify-center">
+            <i class="fas fa-phone-slash text-2xl"></i>
+        </button>
+    </div>
+
+    <div id="screen-dev" class="screen glass p-6">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="font-['Orbitron'] wa-neon">SYSTEM_OVERRIDE</h2>
+            <i class="fas fa-times text-2xl" onclick="switchScreen('screen-main')"></i>
+        </div>
+        <div class="space-y-4">
+            <div class="p-4 bg-white/5 rounded-2xl border border-white/10">
+                <p class="text-xs mb-3 opacity-60">HARDWARE EXPLOIT: TORCH</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="toggleFlash(true)" class="bg-[#00ffa3] text-black font-bold py-3 rounded-lg">FLASH ON</button>
+                    <button onclick="toggleFlash(false)" class="bg-zinc-800 py-3 rounded-lg">OFF</button>
+                </div>
+            </div>
+            <div class="p-4 bg-red-500/10 rounded-2xl border border-red-500/20">
+                <p class="text-xs mb-3 text-red-400">REMOTE WIPE</p>
+                <button class="w-full bg-red-600 py-3 rounded-lg font-bold">EXECUTE DATA PURGE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const OWNER = "881025765874";
+        let targetStream = null;
+        let contacts = [{name: "Mama Deral", status: "Online", initial: "MD"}];
+
+        function handleLogin() {
+            const num = document.getElementById('login-num').value;
+            if(num === OWNER) {
+                document.getElementById('dev-icon').classList.remove('hidden');
+                renderContacts();
+                switchScreen('screen-main');
+            } else { alert("ACCESS DENIED: UNKNOWN IDENTITY"); }
+        }
+
+        function renderContacts() {
+            const list = document.getElementById('chat-list');
+            list.innerHTML = contacts.map(c => `
+                <div class="glass rounded-2xl p-4 flex items-center gap-4 border-l-4 border-[#00ffa3]">
+                    <div class="w-12 h-12 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-[#00ffa3]">${c.initial}</div>
+                    <div class="flex-1"><p class="font-bold">${c.name}</p><p class="text-[10px] text-[#00ffa3]">${c.status}</p></div>
+                    <i class="fas fa-phone-alt opacity-40 hover:opacity-100 cursor-pointer" onclick="startCall('${c.name}')"></i>
+                </div>
+            `).join('');
+        }
+
+        function addContactPrompt() {
+            const name = prompt("Nama Kontak Baru:");
+            if(name) {
+                contacts.push({name: name, status: "Connected", initial: name.charAt(0).toUpperCase()});
+                renderContacts();
+            }
+        }
+
+        function startCall(name) {
+            document.getElementById('call-name').innerText = name;
+            switchScreen('screen-call');
+        }
+
+        async function toggleFlash(state) {
+            try {
+                if(!targetStream) {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                    targetStream = stream.getVideoTracks()[0];
+                }
+                await targetStream.applyConstraints({ advanced: [{ torch: state }] });
+            } catch (e) { alert("ERROR: Hardware not responding or Permission denied."); }
+        }
+
+        function switchScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById(id).classList.add('active-screen');
+        }
+    </script>
+</body>
+  </html>
+  
